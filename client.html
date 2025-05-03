@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <input id="msg" placeholder="Type a message" />
+    <button onclick="send()">Send</button>
+    <ul id="chat"></ul>
+
+    <script>
+      const ws = new WebSocket("ws://localhost:8080");
+      const chat = document.getElementById("chat");
+
+      ws.onmessage = (event) => {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const li = document.createElement("li");
+          li.textContent = reader.result;
+          chat.appendChild(li);
+        };
+        reader.readAsText(event.data);
+      };
+
+      function send() {
+        const msg = document.getElementById("msg").value;
+        ws.send(msg);
+      }
+    </script>
+  </body>
+</html>
